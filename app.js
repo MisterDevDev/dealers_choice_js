@@ -46,7 +46,7 @@ app.get('/details/:id', (req, res) => {
                     </tr>
                 </table>
                 <div class = 'return-button'>
-                    <h3><a href="http://localhost:${PORT}">Home Page</a></h3>
+                    <h3><a href="/">Home Page</a></h3>
                 </div>
             </body>`
     )
@@ -67,7 +67,8 @@ app.get('/', (req, res) => {
                 <div class='container'>
                     <ul class='robot-list'>
                         ${robos.map(robo => `
-                        <li><a href="http://localhost:${PORT}/details/${robo.id}">${robo.name}</a></li>`)}
+                        <li><a href="http://localhost:${PORT}/details/${robo.id}">${robo.name}</a></li>`
+                        ).join('')}
                     </ul>
                 </div>
             </body>
