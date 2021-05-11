@@ -1,10 +1,21 @@
 const express = require('express');
-const details = require('./details')
+const details = require('./details');
+const morgan = require('morgan')
+const client = require('./db')
 
 const app = express();
 const PORT = 1337;
 
+
+app.use (morgan('dev'))
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false}))
+
+const baseQuery = `
+    SELECT *
+    FROM detail;
+`
 
 app.get('/details/:id', (req, res) => {
     const id = req.params.id;
@@ -53,9 +64,10 @@ app.get('/details/:id', (req, res) => {
 })
 
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const robos = details.list();
-
+    const data = await client.query(`${baseQuery}`)
+    console.log(JSON.stringify(data, null, 4));
     res.send(
         `<!DOCTYPE html>
         <html>
