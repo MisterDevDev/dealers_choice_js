@@ -1,25 +1,28 @@
 const express = require('express');
-const details = require('./details');
 const morgan = require('morgan')
 const client = require('./db')
 
 const app = express();
 const PORT = 1337;
 
-
-app.use (morgan('dev'))
+app.use(morgan('combined'))
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}))
 
 const baseQuery = `
     SELECT *
-    FROM detail;
+    FROM detail as d\n
 `
 
-app.get('/details/:id', (req, res) => {
-    const id = req.params.id;
-    const robo = details.find(id);
+app.get('/details/:id', async (req, res, next) => {
+    try {
+    const id = req.params.id;//{ id } = req.params
+    const datas = await client.query(`
+        ${baseQuery}
+          WHERE d.id = $1;
+    `, [id])
+    const robo = datas.rows[0];
     res.send(
         `<!DOCTYPE html>
         <html>
@@ -61,13 +64,15 @@ app.get('/details/:id', (req, res) => {
                 </div>
             </body>`
     )
+    } catch (err) {
+        next(err)
+    }
 })
 
 
 app.get('/', async (req, res) => {
-    const robos = details.list();
-    const data = await client.query(`${baseQuery}`)
-    console.log(JSON.stringify(data, null, 4));
+    const datas = await client.query(`${baseQuery}`)
+    const robos = datas.rows;
     res.send(
         `<!DOCTYPE html>
         <html>
@@ -92,3 +97,5 @@ app.get('/', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`)
 });
+
+//console.log(JSON.stringify(data, null, 4));

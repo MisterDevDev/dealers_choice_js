@@ -6,8 +6,9 @@ h1 {
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    padding: 10px;
 }
 
 .robot-list {
@@ -20,7 +21,11 @@ h1 {
     text-align: left;
 }
 
+.detail-sheet {
+    background-color: moccasin;
+}
 
 .detail-sheet tr td{
+    background-color:lightcyan;
     border: 1px solid black;
 }
