@@ -33,8 +33,3 @@ VALUES('C3PO', 'Commercial Crew & Cargo Program Office', 'protocol droid', 'hars
 
 INSERT INTO detail (name, fullName, directive, weapon, movie, actor)
 VALUES('J.A.R.V.I.S', 'Just A Rather Very Intelligent System' , 'natural language user interface', 'STARK Inc. Arsenal', 'Avengers: Age of Ultron', 'Paul Bettany');
-
-
-
-
-

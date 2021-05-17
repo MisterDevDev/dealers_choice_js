@@ -5,10 +5,10 @@ const client = require('./db')
 const app = express();
 const PORT = 1337;
 
-app.use(morgan('combined'))
+app.use(morgan('dev'))
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false}))
+app.use(express.urlencoded({ extended: false }))
 
 const baseQuery = `
     SELECT *
@@ -70,7 +70,8 @@ app.get('/details/:id', async (req, res, next) => {
 })
 
 
-app.get('/', async (req, res) => {
+app.get('/', async (req, res, next) => {
+    try{
     const datas = await client.query(`${baseQuery}`)
     const robos = datas.rows;
     res.send(
@@ -84,14 +85,18 @@ app.get('/', async (req, res) => {
                 <div class='container'>
                     <ul class='robot-list'>
                         ${robos.map(robo => `
-                        <li><a href="http://localhost:${PORT}/details/${robo.id}">${robo.name}</a></li>`
+                        <li><a href="/details/${robo.id}">${robo.name}</a></li>`
                         ).join('')}
                     </ul>
                 </div>
             </body>
         </html>`
     )
+    } catch (err) {
+        next(err)
+    }
 });
+
 
 
 app.listen(PORT, () => {
